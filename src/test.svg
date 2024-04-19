@@ -1,7 +1,8 @@
-<svg height="735px" width="880px" 
-        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="470px" height="790px" 
+        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+        id="tl_examples/lifetime_func_max/input/">
 
-    <desc>examples/lifetime_struct/input/</desc>
+    <desc>examples/lifetime_func_max/input/</desc>
 
     <defs>
         <style type="text/css">
@@ -15,6 +16,8 @@
 svg {
     background-color: var(--bg-color);
 }
+
+svg:hover { fill: purple; }
 
 text {
     vertical-align: baseline;
@@ -286,36 +289,51 @@ object.code_panel {
 [lifetime-reg-hash="3"]{
     stroke: rgba(241,13,222,0.600);
 }
+        
+        text {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
         ]]>
         </style>
+        <!-- used when pass to function by ref -->
+        <g id="functionDot">
+             <circle cx="0" cy="0" r="5" fill="transparent"/>
+             <text class="functionIcon" dx="-3.5" dy="0" fill="#6e6b5e">f</text>
+        </g>
+        <marker id="arrowHead" viewBox="0 0 10 10"
+            refX="0" refY="4"
+            markerUnits="strokeWidth"
+            markerWidth="3px" markerHeight="3px"
+            orient="auto" fill="gray">
+            <path d="M 0 0 L 8.5 4 L 0 8 z" fill="inherit"/>
+        </marker>
+        <!-- glow highlight filter -->
+        <filter id="glow" x="-5000%" y="-5000%" width="10000%" height="10000%" filterUnits="userSpaceOnUse">
+            <feComposite in="flood" result="mask" in2="SourceGraphic" operator="in"></feComposite>
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge>
+                <feMergeNode in="coloredBlur"></feMergeNode>
+                <feMergeNode in="coloredBlur"></feMergeNode>
+                <feMergeNode in="coloredBlur"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+            <!-- increase brightness -->
+            <feComponentTransfer>
+                <feFuncR type="linear" slope="2"/>
+                <feFuncG type="linear" slope="2"/>
+                <feFuncB type="linear" slope="2"/>
+            </feComponentTransfer>
+        </filter>
     </defs>
 
-    <g>
-        <text id="caption" x="30" y="30">Hover over timeline events (dots), states (vertical lines),</text>
-        <text id="caption" x="30" y="50">and actions (arrows) for extra information.</text>
-    </g>
+<g id="lifetime-column-y: &#x27;a">
+    <text x="170" y="90" style="text-anchor:middle" data-hash="2" class="label tooltip-trigger sync" data-tooltip-text="y: &amp;&#x27;a i32">y: &#x27;a</text>
+    <circle cx="170" cy="290" r="5" data-hash="2" class="tooltip-trigger" data-tooltip-text="bind to variable b" />
+    <line data-hash="2" class="solid tooltip-trigger sync" x1="170" x2="170" y1="290" y2="320" data-tooltip-text="Lifetime of y continues."/>
+    <circle cx="170" cy="320" r="5" data-hash="2" class="tooltip-trigger" data-tooltip-text="dropped after the last use of y" />
+</g>
 
-    <g id="code">
-        <text class="code" x="20" y="90"> <tspan fill="#AAA">1  </tspan>struct Book&lt;'a&gt;{ </text>
-        <text class="code" x="20" y="120"> <tspan fill="#AAA">2  </tspan>    name: &amp;'a String, </text>
-        <text class="code" x="20" y="150"> <tspan fill="#AAA">3  </tspan>    descr: &amp;'a String, </text>
-        <text class="code" x="20" y="180"> <tspan fill="#AAA">4  </tspan>    serial_num: i32 </text>
-        <text class="code" x="20" y="210"> <tspan fill="#AAA">5  </tspan>} </text>
-        <text class="code" x="20" y="240"> <tspan fill="#AAA">6  </tspan> </text>
-        <text class="code" x="20" y="270"> <tspan fill="#AAA">7  </tspan>fn main(){ </text>
-        <text class="code" x="20" y="300"> <tspan fill="#AAA">8  </tspan>    let mut name = String::from("The Rust Book"); </text>
-        <text class="code" x="20" y="330"> <tspan fill="#AAA">9  </tspan>    let descr_str = String::from("New Edition of the Rust Book."); </text>
-        <text class="code" x="20" y="360"> <tspan fill="#AAA">10  </tspan>    let serial_num = 1140987; </text>
-        <text class="code" x="20" y="390"> <tspan fill="#AAA">11  </tspan>    { </text>
-        <text class="code" x="20" y="420"> <tspan fill="#AAA">12  </tspan>        let <tspan data-hash="2">descr_ref</tspan> = &amp;descr_str; </text>
-        <text class="code" x="20" y="450"> <tspan fill="#AAA">13  </tspan>        let <tspan data-hash="3">rust_book</tspan> =  Book { name: &amp;<tspan data-hash="1">name</tspan>, descr: <tspan data-hash="2">descr_ref</tspan>, serial_num: serial_num };  </text>
-        <text class="code" x="20" y="480"> <tspan fill="#AAA">14  </tspan>        println!("The name of the book is {}", rust_book.name); </text>
-        <text class="code" x="20" y="510"> <tspan fill="#AAA">15  </tspan>    } </text>
-        <text class="code" x="20" y="540"> <tspan fill="#AAA">16  </tspan>    name = String::from("Behind Borrow Checker"); </text>
-        <text class="code" x="20" y="570"> <tspan fill="#AAA">17  </tspan>    println!("New name: {}",name); </text>
-        <text class="code" x="20" y="600"> <tspan fill="#AAA">18  </tspan>} </text>
-        <text class="code" x="20" y="630"> <tspan fill="#AAA">19  </tspan> </text>
-    </g>
-
-   
 </svg>

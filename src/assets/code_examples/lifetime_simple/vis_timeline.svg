@@ -1,4 +1,4 @@
-<svg width="275px" height="525px" 
+<svg width="314px" height="525px" 
         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
         id="tl_examples/lifetime_simple/input/">
 
@@ -327,11 +327,11 @@ object.code_panel {
         </filter>
     </defs>
 
-       <text class="funcSigCodeParam" x="10" y="20"> add_one&lt;&#x27;i&gt;( </text>
-       <text class="funcSigCodeParam" x="130" y="20"> &amp;&#x27;i mut u32) </text>
-       <text class="funcSigCodeType" x="130" y="40"> x: &amp;&#x27;x mut u32 </text>
-       <text class="lifetime tooltip-trigger" x="130" y="63" data-tooltip-text="lifetime of x should be contained by &#x27;i"> &#x27;x &lt;&#x3D; &#x27;i </text>
-       <text class="funcSigCodeSep" x="10" y="49"> --------------------------- </text>
+       <text class="funcSigCodeParam" x="10" y="20"> add_one&lt;&#x27;i&gt; ( </text>
+       <text class="funcSigCodeType" x="140" y="40"> x: &amp;&#x27;x mut u32 </text>
+       <text class="lifetime tooltip-trigger" x="140" y="63" data-tooltip-text="lifetime of x should be contained by &#x27;i"> &#x27;x &lt;&#x3D; &#x27;i </text>
+       <text class="funcSigCodeParam" x="164" y="20"> &amp;&#x27;i mut u32 ) </text>
+       <text class="funcSigCodeSep" x="10" y="51"> ------------------------------ </text>
 
     <rect class="tooltip-trigger" lifetime-reg-hash="0" stroke-width="3" stroke-dasharray="5,2" x="25" y="100"  width="185" height="425" fill="none" data-tooltip-text="lifetime calculation block for &#x27;i"/>
 
