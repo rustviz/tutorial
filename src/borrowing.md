@@ -13,10 +13,18 @@ example, `take_and_return_ownership` below takes ownership of a string
 resource and returns ownership of that exact same resource. The caller, `main`,
 assigns the returned resource to the same variable, `s`. 
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="func_take_return_ownership code_panel" data="assets/code_examples/func_take_return_ownership/vis_code.svg"></object>
-  <object type="image/svg+xml" class="func_take_return_ownership tl_panel" data="assets/code_examples/func_take_return_ownership/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('func_take_return_ownership')"></object>
-</div>
+```rv
+fn take_and_return_ownership(some_string : String) -> String {
+    println!("{}", some_string);
+    some_string
+}
+  
+fn main() {
+    let mut s = String::from("hello");
+    s = take_and_return_ownership(s);
+    println!("{}", s);   // OK
+}
+```
 
 This code prints `hello` twice.
 
@@ -54,11 +62,17 @@ takes a reference, it is only *borrowing* access to the resource that the
 reference points to. It does not need to explicitly return the resource because
 it does not own it. Rust knows that the borrow does not outlive the owner 
 because the borrow is no longer accessible after `f` returns.
+```rv
+fn main() {
+    let x = String::from("hello");
+    f(&x); 
+    println!("{}", x);
+}
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="immutable_borrow code_panel" data="assets/code_examples/immutable_borrow/vis_code.svg"></object>
-  <object type="image/svg+xml" class="immutable_borrow tl_panel" data="assets/code_examples/immutable_borrow/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('immutable_borrow')"></object>
-</div>
+fn f(s : &String) {
+    println!("{}", *s);
+}
+```
 
 This code prints `hello` twice.
 
@@ -73,10 +87,14 @@ take their arguments by reference. You can call a method explicitly with a
 reference, e.g. `String::len(&s)`. As shorthand, you can use dot notation to
 call a method, e.g. `s.len()`. This implicitly takes a reference to `s`. 
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="immutable_borrow_method_call code_panel" data="assets/code_examples/immutable_borrow_method_call/vis_code.svg"></object>
-  <object type="image/svg+xml" class="immutable_borrow_method_call tl_panel" data="assets/code_examples/immutable_borrow_method_call/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('immutable_borrow_method_call')"></object>
-</div>
+```rv
+fn main() {
+    let s = String::from("hello");
+    let len1 = String::len(&s);
+    let len2 = s.len(); // shorthand for the above
+    println!("len1 = {} = len2 = {}", len1, len2);
+}
+```
 
 This code prints `len1 = 5 = len2 = 5`.
 
@@ -86,10 +104,18 @@ reason, immutable borrows are also sometimes called shared borrows: each
 immutable reference shares access to the resource with the owner and with any
 other immutable references that might be live.
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="multiple_immutable_borrow code_panel" data="assets/code_examples/multiple_immutable_borrow/vis_code.svg"></object>
-  <object type="image/svg+xml" class="multiple_immutable_borrow tl_panel" data="assets/code_examples/multiple_immutable_borrow/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('multiple_immutable_borrow')"></object>
-</div>
+```rv
+fn main() {
+    let x = String::from("hello");
+    let y = &x;
+    let z = &x;
+    f(y, z);
+}
+
+fn f(s1 : &String, s2 : &String) {
+    println!("{} and {}", s1, s2);
+}
+```
 
 This code prints `hello and hello`.
 
@@ -116,10 +142,15 @@ the `String::push_str` method, and then using the equivalent shorthand method
 call syntax. In both cases, the method takes a *mutable reference* to `s1`,
 written explicitly `&mut s1`.
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="mutable_borrow_method_call code_panel" data="assets/code_examples/mutable_borrow_method_call/vis_code.svg"></object>
-  <object type="image/svg+xml" class="mutable_borrow_method_call tl_panel" data="assets/code_examples/mutable_borrow_method_call/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('mutable_borrow_method_call')"></object>
-</div>
+```rv 
+fn main() { 
+    let mut s1 = String::from("Hello");
+    let s2 = String::from(", world");
+    String::push_str(&mut s1, &s2); 
+    s1.push_str(&s2); // shorthand for the above
+    println!("{}", s1); // prints "Hello, world, world"
+}
+```
 
 This code prints `Hello, world, world`.
 
@@ -202,9 +233,20 @@ there remain future uses of the borrow. A borrow dies as soon it is no longer
 needed. So the following code works, even though there are two mutable borrows
 in the same scope:
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="nll_lexical_scope_different code_panel" data="assets/code_examples/nll_lexical_scope_different/vis_code.svg"></object>
-  <object type="image/svg+xml" class="nll_lexical_scope_different tl_panel" data="assets/code_examples/nll_lexical_scope_different/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('nll_lexical_scope_different')"></object>
-</div>
+```rv
+fn main() {
+    let mut x = String::from("Hello");
+    let y = &mut x;
+    world(y);
+    let z = &mut x; // OK, because y's lifetime has ended (last use was on previous line)
+    world(z);
+    x.push_str("!!"); // Also OK, because y and z's lifetimes have ended
+    println!("{}", x);
+}
+
+fn world(s : &mut String) {
+    s.push_str(", world");
+}
+```
 
 This code prints `Hello, world, world!!`.

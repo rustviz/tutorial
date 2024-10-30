@@ -34,10 +34,26 @@ Hover over the different components of the visualization to see explanations.
 Don't worry yet about what is going on in detail—these concepts will be
 explained in this tutorial.
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="hatra2 code_panel" data="assets/code_examples/hatra2/vis_code.svg"></object>
-  <object type="image/svg+xml" class="hatra2 tl_panel" data="assets/code_examples/hatra2/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('hatra2')"></object>
-</div>
+```rv
+fn compare_strings(s1: &String, s2: &String) -> bool{
+  *s1 == *s2
+}
+
+fn clear_string(s3: & mut String) {
+  s3.clear();
+}
+
+fn main(){
+  let mut s = String::from("hello");
+
+  let r1 = &s;
+  let r2 = &s;
+  compare_strings(r1, r2); // can't use assert macro (desugared to an if expr)
+
+  let r3 = &mut s;
+  clear_string(r3);
+}
+```
 
 ## Research Disclosure
 
