@@ -224,7 +224,6 @@ If the borrow checker did not stop us, this program would have a race
 condition—it could print either `Hello, world, friend` or `Hello, friend, world`
 depending on the interleaving of the main thread and the newly spawned thread.
 By tightly controlling mutation, Rust prevents races mediated by shared mutable state.
-(The topic of parallelism and concurrency in Rust will be explored further in A9!)
 
 ## Non-Lexical Lifetimes
 

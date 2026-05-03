@@ -79,10 +79,13 @@ causes ownership of the string resource to be moved from `x` to `y`. Note that
 this behavior is different than than the copying behavior for simple types like
 integers that we discussed in the previous section. 
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="string_from_move_print code_panel" data="assets/code_examples/string_from_move_print/vis_code.svg"></object>
-  <object type="image/svg+xml" class="string_from_move_print tl_panel" data="assets/code_examples/string_from_move_print/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('string_from_move_print')"></object>
-</div>
+```rv
+fn main() {
+    let x = String::from("hello");
+    let y = x;
+    println!("{}", y);
+}
+```
 
 This code prints `hello`.
 

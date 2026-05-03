@@ -107,7 +107,7 @@ When the any of the data members is not owned by the struct, it needs lexical li
 
 Here is an example of using lifetime annotations `<'a>` in struct definitions to allow reference of string `&p` in a `struct Excerpt`.
 
-```rust
+```rv
 struct Excerpt<'a> {
     p: &'a str,
 }
@@ -119,7 +119,7 @@ fn some_function() {
         p: first,
     };
     println!("{}", first);
-    // 'i' cannot be returned be returned
+    // 'i' cannot be returned
     // because the struct outlives 'n'
 }
 
