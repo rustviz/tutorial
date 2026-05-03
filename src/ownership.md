@@ -37,10 +37,12 @@ For example, heap-allocated strings, of type `String`, are managed by Rust's own
 Consider the following example, which constructs a heap-allocated string and
 prints it out.
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="string_from_print code_panel" data="assets/code_examples/string_from_print/vis_code.svg"></object>
-  <object type="image/svg+xml" class="string_from_print tl_panel" data="assets/code_examples/string_from_print/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('string_from_print')"></object>
-</div>
+```rv
+fn main() {
+    let s = String::from("hello");
+    println!("{}", s);
+}
+```
 
 This code prints `hello`.
 
@@ -77,10 +79,13 @@ causes ownership of the string resource to be moved from `x` to `y`. Note that
 this behavior is different than than the copying behavior for simple types like
 integers that we discussed in the previous section. 
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="string_from_move_print code_panel" data="assets/code_examples/string_from_move_print/vis_code.svg"></object>
-  <object type="image/svg+xml" class="string_from_move_print tl_panel" data="assets/code_examples/string_from_move_print/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('string_from_move_print')"></object>
-</div>
+```rv
+fn main() {
+    let x = String::from("hello");
+    let y = x;
+    println!("{}", y);
+}
+```
 
 This code prints `hello`.
 
@@ -110,22 +115,32 @@ then you can see by
 hovering over the visualization that the resource is dropped at the end of `y`'s
 scope rather than at the end of `x`'s scope.
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="move_different_scope code_panel" data="assets/code_examples/move_different_scope/vis_code.svg"></object>
-  <object type="image/svg+xml" class="move_different_scope tl_panel" data="assets/code_examples/move_different_scope/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('move_different_scope')"></object>
-</div>
+```rv
+fn main() {
+    let x = String::from("hello");
+    let z = {
+        let y = x;
+        println!("{}", y);
+        // ...
+    };
+    println!("Hello, world!");
+}
+```
 
 This code prints `hello` on one line and `Hello, world!` on the next.
 
 ### Assignment
 
-As with binding, ownership can be moved by assignment to a mutable variable,
+As with binding, ownership can be moved by assignment to a mutable variable,cd
 e.g. `y` in the following example.
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="move_assignment code_panel" data="assets/code_examples/move_assignment/vis_code.svg"></object>
-  <object type="image/svg+xml" class="move_assignment tl_panel" data="assets/code_examples/move_assignment/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('move_assignment')"></object>
-</div>
+```rv
+fn main() {
+  let x = String::from("hello");
+  let mut y = String::from("test");
+  y = x;
+}
+```
 
 When `y` acquires ownership over `x`'s resource on Line 4, the resource it
 previously acquired (on Line 3) no longer has an owner, so it is dropped.
@@ -138,10 +153,17 @@ below we see that ownership of the string resource in `main` is moved from `s`
 to the `takes_ownership` function. Consequently, when `s` goes out of scope at
 the end of `main`, there is no owned string resource to be dropped.
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="func_take_ownership code_panel" data="assets/code_examples/func_take_ownership/vis_code.svg"></object>
-  <object type="image/svg+xml" class="func_take_ownership tl_panel" data="assets/code_examples/func_take_ownership/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('func_take_ownership')"></object>
-</div>
+```rv
+fn main() {
+    let s = String::from("hello");
+    takes_ownership(s);
+    // println!("{}", s) // won't compile if added
+}
+
+fn takes_ownership(some_string: String) {
+    println!("{}", some_string);
+}
+```
 
 This code prints `hello`.
 
@@ -162,9 +184,17 @@ owner, `s`, goes out of scope at the end of `main`. (If the `String` were
 dropped at the end of `f`, there would be a use-after-free bug in `main` on Line
 9!)
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="move_func_return code_panel" data="assets/code_examples/move_func_return/vis_code.svg"></object>
-  <object type="image/svg+xml" class="move_func_return tl_panel" data="assets/code_examples/move_func_return/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('move_func_return')"></object>
-</div>
+```rv
+fn f() -> String {
+    let x = String::from("hello");
+    // ...
+    x
+} 
+  
+fn main() {
+    let s = f();
+    println!("{}", s);
+}
+```
 
 This code prints `hello`.

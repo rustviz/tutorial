@@ -27,34 +27,103 @@ We create an instance by stating the name of the struct and then add curly brack
 ```
 Each fields in the struct can be referenced independently. Here's an example of defining a struct, generating an instance of it, letting it interact with functions and referencing field `r.h`.
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="struct_rect code_panel" data="assets/code_examples/struct_rect/vis_code.svg"></object>
-  <object type="image/svg+xml" class="struct_rect tl_panel" data="assets/code_examples/struct_rect/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('struct_rect')"></object>
-</div>
+```rv
+struct Rect {
+    w: u32,
+    h: u32,
+}
+
+fn main() {
+    let r = Rect {
+      w: 30,
+      h: 50,
+    };
+
+    println!(
+      "The area of the rectangle is {} square pixels.",
+      area(&r)
+    );
+    
+    println!("The height of that is {}.", r.h);
+}
+
+fn area(rect: &Rect) -> u32 {
+  rect.w * rect.h
+}
+```
 
 #### Calling a method in a struct
 
 Struct can also include methods whose definition is given in the `impl` of it.  When calling a method or a variable from a struct, we use `object.something()`or ` (&object).something()`, which are the same. No matter it is a `&, &mut, *`or nothing, always use `.` and not need to use `->` because Rust will automatically adds in `&, &mut, *` so `object` matches the signature of the method. 
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="struct_rect2 code_panel" data="assets/code_examples/struct_rect2/vis_code.svg"></object>
-  <object type="image/svg+xml" class="struct_rect2 tl_panel" data="assets/code_examples/struct_rect2/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('struct_rect2')"></object>
-</div>
+```rv
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    fn area(&self) -> u32 {
+      self.width * self.height
+    }
+}
+
+fn print_area(rect: &Rectangle) {
+  println!(
+    "The area of the rectangle is {} square pixels.",
+    rect.area() // dot even though it's actually a reference
+  );
+}
+
+fn main() {
+  let r = Rectangle {
+    width: 30,
+    height: 50,
+  };
+
+  print_area(&r);
+}
+```
 
 #### Ownership of struct data
 
 When the instance of the struct owns all its fields, i.e. no reference or pointer in the struct, the ownership is basically the same with data outside of a struct. It's also possible for fields of a struct to own resources. Here's an example of the cases where one of the field `y` owns a `string` resouce.
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="struct_string code_panel" data="assets/code_examples/struct_string/vis_code.svg"></object>
-  <object type="image/svg+xml" class="struct_string tl_panel" data="assets/code_examples/struct_string/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('struct_string')"></object>
-</div>
+```rv
+struct Foo {
+    x: i32,
+    y: String,
+}
+
+fn main() {
+    let _y = String :: from("bar");
+    let f = Foo { x: 5, y: _y };
+    println!("{}", f.x);
+    println!("{}", f.y);
+}
+```
 
 When the any of the data members is not owned by the struct, it needs lexical lifetime specified to allow the struct owning a reference of a data resouce. This will ensure that the resource referenced will have the same lifetime as the struct as long as they share the same lexical lifetime label.
 
 Here is an example of using lifetime annotations `<'a>` in struct definitions to allow reference of string `&p` in a `struct Excerpt`.
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="struct_lifetime code_panel" data="assets/code_examples/struct_lifetime/vis_code.svg"></object>
-  <object type="image/svg+xml" class="struct_lifetime tl_panel" data="assets/code_examples/struct_lifetime/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('struct_lifetime')"></object>
-</div>
+```rv
+struct Excerpt<'a> {
+    p: &'a str,
+}
+
+fn some_function() {
+    let n = String::from("Ok. I'm fine.");
+    let first = n.split('.').next().expect("Could not find a '.'");
+    let i = Excerpt {
+        p: first,
+    };
+    println!("{}", first);
+    // 'i' cannot be returned
+    // because the struct outlives 'n'
+}
+
+fn main() {
+    some_function();
+}
+```

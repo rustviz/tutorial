@@ -3,9 +3,10 @@
 This is a short introduction to the Rust programming language, intended for
 programmers with some C or C++ experience. 
 
-The tutorial makes use of an interactive visualization system for Rust code
-being developed by FP Lab. You should read this tutorial before completing 
-the remaining questions, Q2 and Q3. 
+The tutorial makes use of [RustViz](https://github.com/rustviz/rustviz),
+an interactive visualization system for Rust code being developed by
+[FP Lab](https://fplab.mplse.org/). You can also try the snippets in
+this tutorial in the [RustViz Playground](https://rustviz.github.io/).
 
 # Motivation
 
@@ -34,17 +35,24 @@ Hover over the different components of the visualization to see explanations.
 Don't worry yet about what is going on in detail—these concepts will be
 explained in this tutorial.
 
-<div class="flex-container vis_block" style="position:relative; margin-left:-75px; margin-right:-75px; display: flex;">
-  <object type="image/svg+xml" class="hatra2 code_panel" data="assets/code_examples/hatra2/vis_code.svg"></object>
-  <object type="image/svg+xml" class="hatra2 tl_panel" data="assets/code_examples/hatra2/vis_timeline.svg" style="width: auto;" onmouseenter="helpers('hatra2')"></object>
-</div>
+```rv
+fn main() {
+  let mut s = String::from("hello");
 
-## Research Disclosure
+  let r1 = &s;
+  let r2 = &s;
+  compare_strings(r1, r2); // can't use assert macro (desugared to an if expr)
 
-Your exercise answers and logs of your interactions with this tool might be used
-for research purposes. All data used for research purposes will be anonymized:
-your identity will not be connected to this data. If you wish to opt out, you
-can contact the instructor (comar@umich.edu) at any time up to seven days after 
-final grades have been issued. Opting out has no impact on your grade. 
+  let r3 = &mut s;
+  clear_string(r3);
+}
 
-Click the next button on the right of the page to continue.
+fn compare_strings(s1: &String, s2: &String) -> bool{
+  *s1 == *s2
+}
+
+fn clear_string(s3: &mut String) {
+  s3.clear();
+}
+```
+
