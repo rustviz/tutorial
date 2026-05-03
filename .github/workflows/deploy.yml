@@ -1,0 +1,102 @@
+# Build the tutorial mdBook on every push to `main` and deploy it to
+# GitHub Pages. The site URL is determined by the repo name —
+# project pages always live at `<org>.github.io/<repo>/`. With the
+# repo named `tutorial` you get `rustviz.github.io/tutorial/`; until
+# the rename it'll be at `rustviz.github.io/<current-name>/`.
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  # Manual trigger so we can re-deploy without a push.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  # Required by actions/deploy-pages.
+  pages: write
+  id-token: write
+
+# Don't queue concurrent deploys — newer pushes win and old ones
+# get cancelled mid-build.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # The RustViz plugin links against `rustc_private`, which pins
+      # the toolchain. Keep this in sync with `rust-toolchain.toml`
+      # in the rustviz/rustviz repo.
+      RUST_NIGHTLY: nightly-2025-08-20
+      # The plugin source repo. Today the workspace lives at
+      # rustviz/rustviz2; we clone its main and `cargo install
+      # --path` the two binaries we need.
+      PLUGIN_REPO: rustviz/rustviz2
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install nightly toolchain
+        run: |
+          rustup toolchain install $RUST_NIGHTLY \
+            --profile minimal \
+            --component rust-src,rustc-dev,llvm-tools-preview
+          rustup default $RUST_NIGHTLY
+          rustc --version
+
+      # Cache the cargo registry + the installed plugin/preprocessor
+      # binaries. The slow step is `cargo install --path …` for the
+      # rustc-plugin (5+ minutes); cache hits make subsequent runs
+      # take a few seconds.
+      - name: Cache cargo registry + installed binaries
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin
+          key: ${{ runner.os }}-rustviz-tutorial-${{ env.RUST_NIGHTLY }}-${{ hashFiles('book.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-rustviz-tutorial-${{ env.RUST_NIGHTLY }}-
+
+      - name: Install mdBook 0.5+
+        run: |
+          if ! command -v mdbook >/dev/null || ! mdbook --version | grep -q ' v0.5'; then
+            cargo install mdbook --version "^0.5" --locked
+          fi
+          mdbook --version
+
+      - name: Clone and install rustviz2-plugin + mdbook-rustviz
+        run: |
+          if [ ! -x ~/.cargo/bin/cargo-rv-plugin ] || [ ! -x ~/.cargo/bin/mdbook-rustviz ]; then
+            git clone --depth 1 https://github.com/${PLUGIN_REPO} ../plugin-src
+            cargo install --path ../plugin-src/rustviz2-plugin --locked
+            cargo install --path ../plugin-src/mdbook-rustviz --locked
+          fi
+          mdbook-rustviz --help >/dev/null && echo "mdbook-rustviz OK"
+
+      - name: Build the book
+        env:
+          # In-process plugin invocation — no Docker needed in CI.
+          RV_RUNNER: local
+        run: mdbook build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: book
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
