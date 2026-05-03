@@ -3,9 +3,10 @@
 This is a short introduction to the Rust programming language, intended for
 programmers with some C or C++ experience. 
 
-The tutorial makes use of an interactive visualization system for Rust code
-being developed by FP Lab. You should read this tutorial before completing 
-the remaining questions, Q2 and Q3. 
+The tutorial makes use of [RustViz](https://github.com/rustviz/rustviz),
+an interactive visualization system for Rust code being developed by
+[FP Lab](https://fplab.mplse.org/). You can also try the snippets in
+this tutorial in the [RustViz Playground](https://rustviz.github.io/).
 
 # Motivation
 
@@ -35,15 +36,7 @@ Don't worry yet about what is going on in detail—these concepts will be
 explained in this tutorial.
 
 ```rv
-fn compare_strings(s1: &String, s2: &String) -> bool{
-  *s1 == *s2
-}
-
-fn clear_string(s3: & mut String) {
-  s3.clear();
-}
-
-fn main(){
+fn main() {
   let mut s = String::from("hello");
 
   let r1 = &s;
@@ -53,14 +46,13 @@ fn main(){
   let r3 = &mut s;
   clear_string(r3);
 }
+
+fn compare_strings(s1: &String, s2: &String) -> bool{
+  *s1 == *s2
+}
+
+fn clear_string(s3: &mut String) {
+  s3.clear();
+}
 ```
 
-## Research Disclosure
-
-Your exercise answers and logs of your interactions with this tool might be used
-for research purposes. All data used for research purposes will be anonymized:
-your identity will not be connected to this data. If you wish to opt out, you
-can contact the instructor (comar@umich.edu) at any time up to seven days after 
-final grades have been issued. Opting out has no impact on your grade. 
-
-Click the next button on the right of the page to continue.
