@@ -76,7 +76,14 @@ jobs:
             cargo install --path ../plugin-src/rustviz2-plugin --locked
             cargo install --path ../plugin-src/mdbook-rustviz --locked
           fi
-          mdbook-rustviz --help >/dev/null && echo "mdbook-rustviz OK"
+          # Just confirm the binaries are on PATH. Avoid `--help`:
+          # mdbook-rustviz's main returns clap's DisplayHelp via `?`,
+          # which exits non-zero (clap's error printer emits the help
+          # text but treats it as an error). The real usage shape
+          # (`mdbook-rustviz supports html` + stdin protocol) is
+          # exercised by the `mdbook build` step below.
+          command -v mdbook-rustviz
+          command -v cargo-rv-plugin
 
       - name: Build the book
         env:
