@@ -1,13 +1,13 @@
-# Build the tutorial mdBook on every push to `main` and deploy it to
-# GitHub Pages. The site URL is determined by the repo name —
-# project pages always live at `<org>.github.io/<repo>/`. With the
-# repo named `tutorial` you get `rustviz.github.io/tutorial/`; until
-# the rename it'll be at `rustviz.github.io/<current-name>/`.
+# Build the tutorial mdBook on every push to `master` and deploy it
+# to GitHub Pages. The site URL is determined by the repo name —
+# project pages always live at `<org>.github.io/<repo>/`, so with
+# the repo named `tutorial` the deployed URL is
+# `rustviz.github.io/tutorial/`.
 name: deploy
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   # Manual trigger so we can re-deploy without a push.
   workflow_dispatch:
 
