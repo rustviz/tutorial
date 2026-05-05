@@ -32,10 +32,9 @@ jobs:
       # the toolchain. Keep this in sync with `rust-toolchain.toml`
       # in the rustviz/rustviz repo.
       RUST_NIGHTLY: nightly-2025-08-20
-      # The plugin source repo. Today the workspace lives at
-      # rustviz/rustviz2; we clone its main and `cargo install
-      # --path` the two binaries we need.
-      PLUGIN_REPO: rustviz/rustviz2
+      # The plugin source repo. We clone its main and
+      # `cargo install --path` the two binaries we need.
+      PLUGIN_REPO: rustviz/rustviz
     steps:
       - uses: actions/checkout@v5
 
