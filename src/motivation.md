@@ -47,11 +47,11 @@ fn main() {
     clear_string(r3);
 }
 
-fn compare_strings(s1: &String, s2: &String) -> bool {
+fn compare_strings(s1: &String, s2: &String) -> bool { // rustviz: hide
     *s1 == *s2
 }
 
-fn clear_string(s3: &mut String) {
+fn clear_string(s3: &mut String) { // rustviz: hide
     s3.clear();
 }
 ```
