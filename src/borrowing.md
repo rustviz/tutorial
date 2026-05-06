@@ -14,7 +14,7 @@ resource and returns ownership of that exact same resource. The caller, `main`,
 assigns the returned resource to the same variable, `s`. 
 
 ```rv
-fn take_and_return_ownership(some_string : String) -> String {
+fn take_and_return_ownership(some_string: String) -> String {
     println!("{}", some_string);
     some_string
 }
@@ -69,7 +69,7 @@ fn main() {
     println!("{}", x);
 }
 
-fn f(s : &String) {
+fn f(s: &String) {
     println!("{}", *s);
 }
 ```
@@ -112,7 +112,7 @@ fn main() {
     f(y, z);
 }
 
-fn f(s1 : &String, s2 : &String) {
+fn f(s1: &String, s2: &String) {
     println!("{} and {}", s1, s2);
 }
 ```
@@ -178,7 +178,7 @@ fn main() {
   String::push_str(y, ", world");
 }
 
-fn f(x : &String) {
+fn f(x: &String) {
   println!("{}", x);
 }
 ```
@@ -243,7 +243,7 @@ fn main() {
     println!("{}", x);
 }
 
-fn world(s : &mut String) {
+fn world(s: &mut String) {
     s.push_str(", world");
 }
 ```

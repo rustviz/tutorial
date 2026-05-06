@@ -136,9 +136,9 @@ e.g. `y` in the following example.
 
 ```rv
 fn main() {
-  let x = String::from("hello");
-  let mut y = String::from("test");
-  y = x;
+    let x = String::from("hello");
+    let mut y = String::from("test");
+    y = x;
 }
 ```
 
