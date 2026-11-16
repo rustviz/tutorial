@@ -52,6 +52,28 @@ snippet in a sandboxed `rustviz/rustviz-runner` container — useful
 if you're authoring a public site and don't want to trust arbitrary
 snippets, but heavier to set up.
 
+### Working on RustViz itself
+
+To try plugin or preprocessor changes in this book, install from a
+checkout of [rustviz/rustviz](https://github.com/rustviz/rustviz) instead
+of crates.io. That repo's rust-toolchain.toml picks the nightly, so the
+toolchain from `rustviz init` (or `cargo xtask setup`) still applies:
+
+```bash
+git clone https://github.com/rustviz/rustviz
+cd rustviz
+cargo install --locked --path rustviz-plugin
+cargo install --locked --path mdbook-rustviz
+```
+
+`cargo xtask setup` also installs the plugin and the toolchain, but not
+`mdbook-rustviz`, so run the second command either way. After every change
+to the plugin or the preprocessor, reinstall (the book runs the *installed*
+binaries, not your source tree) and rebuild here with
+`RV_RUNNER=local mdbook serve --open`. See the "Building from this checkout"
+section of the [rustviz README](https://github.com/rustviz/rustviz#readme)
+for details.
+
 ## Authoring
 
 Code blocks tagged ` ```rv ` are picked up by the preprocessor and
