@@ -56,3 +56,18 @@ fn clear_string(s3: &mut String) { // rustviz: hide
 }
 ```
 
+
+---
+
+*About usage data.* This site records how it is used, for research on
+learning Rust: which pages you open, which parts of the diagrams you point
+at, and how long you look, together with a random ID kept in your browser so
+visits can be linked. It records no name, e-mail address, IP address or
+cookies. See [what is recorded and why](https://rustviz.github.io/privacy/),
+or open <a href="#rv-your-data">Your data</a> to see your ID and turn
+recording off.
+
+<!-- MAINTAINER placeholder: replace with the study's wording (name, who runs
+     it, a contact address) once the IRB has decided. -->
+[Placeholder for the research-study sentence: study name, who runs it (PI)
+and a contact address. To be written by the maintainer / IRB.]
