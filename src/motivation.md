@@ -64,8 +64,8 @@ learning Rust: which pages you open, which parts of the diagrams you point
 at, and how long you look, together with a random ID kept in your browser so
 visits can be linked. It records no name, e-mail address, IP address or
 cookies. See [what is recorded and why](https://rustviz.github.io/privacy/),
-or open <a href="#rv-your-data">Your data</a> to see your ID and turn
-recording off.
+or open [Your data](https://rustviz.github.io/privacy/#your-data) to see your
+ID and turn recording off.
 
 <!-- MAINTAINER placeholder: replace with the study's wording (name, who runs
      it, a contact address) once the IRB has decided. -->
