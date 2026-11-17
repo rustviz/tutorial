@@ -15,15 +15,16 @@ rendered HTML.
 
 You'll need:
 
-1. **The Rust nightly in rustviz/rustviz's `rust-toolchain.toml`** (the
-   RustViz plugin links against `rustc_private`, which pins the
-   toolchain). Today that is `nightly-2026-05-01`; check the
-   [current value](https://github.com/rustviz/rustviz/blob/main/rust-toolchain.toml)
-   and substitute it below.
+1. **The RustViz CLI, which installs the plugin and its toolchain.** The
+   RustViz plugin links against `rustc_private`, so it needs one specific
+   nightly (today `nightly-2026-05-01`, the `rust-toolchain.toml` of
+   [rustviz/rustviz](https://github.com/rustviz/rustviz/blob/main/rust-toolchain.toml)).
+   `rustviz init` installs that nightly (with `rust-src`, `rustc-dev` and
+   `llvm-tools-preview`) and the plugin:
 
    ```bash
-   rustup toolchain install nightly-2026-05-01 \
-       --component rust-src,rustc-dev,llvm-tools-preview
+   cargo install rustviz
+   rustviz init
    ```
 
 2. **mdBook 0.5+**. mdBook 0.5 needs Rust ≥ 1.88, which the project
@@ -33,14 +34,10 @@ You'll need:
    cargo +nightly-2026-05-01 install mdbook --version "^0.5"
    ```
 
-3. **The RustViz plugin and the mdBook preprocessor**, both built
-   from the [rustviz repo](https://github.com/rustviz/rustviz):
+3. **The mdBook preprocessor**:
 
    ```bash
-   git clone https://github.com/rustviz/rustviz
-   cd rustviz
-   cargo install --path rustviz-plugin
-   cargo install --path mdbook-rustviz
+   cargo install mdbook-rustviz
    ```
 
 Then, in this repo:
@@ -54,6 +51,28 @@ doesn't need Docker. The default `RV_RUNNER=docker` runs each
 snippet in a sandboxed `rustviz/rustviz-runner` container — useful
 if you're authoring a public site and don't want to trust arbitrary
 snippets, but heavier to set up.
+
+### Working on RustViz itself
+
+To try plugin or preprocessor changes in this book, install from a
+checkout of [rustviz/rustviz](https://github.com/rustviz/rustviz) instead
+of crates.io. That repo's rust-toolchain.toml picks the nightly, so the
+toolchain from `rustviz init` (or `cargo xtask setup`) still applies:
+
+```bash
+git clone https://github.com/rustviz/rustviz
+cd rustviz
+cargo install --locked --path rustviz-plugin
+cargo install --locked --path mdbook-rustviz
+```
+
+`cargo xtask setup` also installs the plugin and the toolchain, but not
+`mdbook-rustviz`, so run the second command either way. After every change
+to the plugin or the preprocessor, reinstall (the book runs the *installed*
+binaries, not your source tree) and rebuild here with
+`RV_RUNNER=local mdbook serve --open`. See the "Building from this checkout"
+section of the [rustviz README](https://github.com/rustviz/rustviz#readme)
+for details.
 
 ## Authoring
 
@@ -78,6 +97,11 @@ and methods); on a `struct` or `use` line it is ignored
 ([rustviz/rustviz#814](https://github.com/rustviz/rustviz/issues/814)). When
 you hide a function, say in the prose what it does, since readers can no
 longer see its body.
+
+The deploy workflow (`.github/workflows/deploy.yml`) instead builds the
+plugin and preprocessor from rustviz/rustviz's `main`, so the published book
+always renders with the latest RustViz. Pushes to `master` deploy it to
+<https://rustviz.github.io/tutorial/>.
 
 See [`mdbook-rustviz`'s README](https://github.com/rustviz/rustviz/tree/main/mdbook-rustviz)
 for configuration options.
